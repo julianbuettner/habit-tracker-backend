@@ -19,3 +19,21 @@ with counterparts like
 Check out Grafana dashboard example `grafana-dashboard.json`.
 
 
+## Setup
+
+Create a configuration at `~/.habit-tracker.yaml`.
+
+```yaml
+---
+
+postgres: "postgres://habit:habit@localhost:5432/habit"
+
+auth-whitelist:
+  - this-is-like-an-unhashed-password
+  - too-lazy-for-user-management
+
+```
+
+Then run the release binary.
+
+
