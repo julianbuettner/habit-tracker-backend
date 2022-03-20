@@ -1,0 +1,207 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 3,
+  "iteration": 1647782214702,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "BfehGEP7z"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "bars",
+            "fillOpacity": 15,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 4,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 19,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "8.4.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "BfehGEP7z"
+          },
+          "format": "time_series",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT q.date as \"time\", coalesce(positive, 0) as \"positives\" FROM\n(\n  SELECT\n    calendar::date AS \"date\", tt.positive\n  FROM\n    generate_series(to_timestamp(${__from:date:seconds}), to_timestamp(${__to:date:seconds}), '1 day'::interval) calendar\n  LEFT JOIN\n  (\n    SELECT\n      date(\"date\") AS \"date\",\n      sum(\"posunits\") AS \"positive\"\n    FROM habitdays\n    WHERE name = '${habitname}'\n    GROUP BY \"date\"\n    ORDER BY 1\n  ) AS tt\n  ON calendar.date = tt.date\n) AS q;\n",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "BfehGEP7z"
+          },
+          "format": "time_series",
+          "group": [],
+          "hide": false,
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT q.date as \"time\", coalesce(negatives, 0) as \"negative\" FROM\n(\n  SELECT\n    calendar::date AS \"date\", tt.negatives\n  FROM\n    generate_series(to_timestamp(${__from:date:seconds}), to_timestamp(${__to:date:seconds}), '1 day'::interval) calendar\n  LEFT JOIN\n  (\n    SELECT\n      date(\"date\") AS \"date\",\n      sum(\"negunits\") AS \"negatives\"\n    FROM habitdays\n    WHERE name = '${habitname}'\n    GROUP BY \"date\"\n    ORDER BY 1\n  ) AS tt\n  ON calendar.date = tt.date\n) AS q;\n",
+          "refId": "B",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "Habit Metrics",
+      "type": "timeseries"
+    }
+  ],
+  "schemaVersion": 35,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": true,
+          "text": "Food",
+          "value": "Food"
+        },
+        "datasource": {
+          "type": "postgres",
+          "uid": "BfehGEP7z"
+        },
+        "definition": "select (name) from habitname;",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Habit Name",
+        "multi": false,
+        "name": "habitname",
+        "options": [],
+        "query": "select (name) from habitname;",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-30d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Habits",
+  "uid": "zlE2MEEnz",
+  "version": 9,
+  "weekStart": ""
+}
